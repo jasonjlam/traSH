@@ -11,6 +11,7 @@
 #include "shell.h"
 
 int main(){
+    int i = 0;
     int size = 0;
     char input[256];
     while (1) {
@@ -21,16 +22,22 @@ int main(){
         cleanInput(input);
         printf("\n%s", input);
         printf("\n# of args: %d \n", charFreq(input, " "));
-        char ** argv = parseArgs(input, " ");
-        int f = fork();
-        if (f == 0) {
-            execvp(argv[0], argv);
-        }
-        else if (f==-1) {
-            return -1;
-        }
-        else {
-            wait(NULL);
+        char ** argc = parseArgs(input, ";");
+        for (i; argc[i] != NULL; i ++) {
+            char** args = parseArgs(argc[i], " ");
+            int f = fork();
+            printf("%d\n", f);
+            if (f == 0) {
+                execvp(args[0], args);
+            }
+            else if (f==-1) {
+                printf("yadungoofed\n");
+                return -1;
+            }
+            else {
+                printf("ahshitherewegoagain\n");
+                wait(NULL);
+            }
         }
     }
 
