@@ -8,6 +8,7 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <dirent.h>
+#include "cmds.h"
 
 int charFreq(char *input, char *delim){
     int i = 0;
@@ -25,8 +26,9 @@ char **parseArgs(char *input, char *separator){
     char *token;
     int i = 0;
     int size = charFreq(input, separator);
+    printf("charFreq:%d\n", size);
     char ** argv = calloc(sizeof(char *), size + 1);
-    for (i; i < size; i++) {
+    for (i = 0; i < size; i++) {
         token = strsep(&line, separator);
         argv[i] = malloc(sizeof(char[strlen(token)]));
         argv[i] = token;
@@ -45,4 +47,38 @@ char *cleanInput(char input[256]){
         }
     }
     return input;
+}
+
+int runCommand(char argc[256]) {
+    char ** args = parseArgs(argc, " ");
+    int f = fork();
+    printf("int: %d\n", f);
+    printf("check: %d", args[0] == "cd");
+    if (f == 0) {
+        if (strcmp(args[0],"cd") == 0) {
+            cd(args[1]);
+        }
+        else if (strcmp(args[0], "exit") == 0) {
+            exit();
+        }
+    for (i; argv[i]!=NULL; i++) {
+        free(argv[i])
+    }
+    free(argv);rgs[])
+        }
+        else {
+            execvp(args[0], args);
+        }
+    }
+    else if (f==-1) {
+        return -1;
+    }
+    else {
+        wait(NULL);
+    }
+    int i = 0;
+    for (i; args[i]!=NULL; i++) {
+        free(args[i])
+    }
+    free(args);
 }
