@@ -13,6 +13,7 @@
 int main(){
     int i = 0;
     int f = 0;
+    int result = 0;
     int size = 0;
     char input[256];
     char ** argc = NULL;
@@ -26,7 +27,11 @@ int main(){
         printf("\n# of args: %d \n", charFreq(input, " "));
         argc = parseArgs(input, ";");
         for (i = 0; argc[i] != NULL; i ++) {
-            if (runCommand(argc[i]) == -1) {
+            result = runCommand(argc[i]);
+            if (result == 0) {
+                return 0;
+            }
+            else if (result == -1) {
                 return -1;
             }
         }

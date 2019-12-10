@@ -15,7 +15,3 @@ void cd(char *dir) {
         printf("Error changing current directory\n");
     }
 }
-
-void exit() {
-        exit(0;)
-}

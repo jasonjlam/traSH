@@ -52,33 +52,29 @@ char *cleanInput(char input[256]){
 int runCommand(char argc[256]) {
     char ** args = parseArgs(argc, " ");
     int f = fork();
+    int i = 0;
     printf("int: %d\n", f);
-    printf("check: %d", args[0] == "cd");
+    if (strcmp(args[0], "exit") == 0) {
+        return 0;
+    }
     if (f == 0) {
+        printf("check: %d", strcmp(args[0], "cd"));
+        printf("exit check: %d", strcmp(args[0], "exit"));
         if (strcmp(args[0],"cd") == 0) {
             cd(args[1]);
-        }
-        else if (strcmp(args[0], "exit") == 0) {
-            exit();
-        }
-    for (i; argv[i]!=NULL; i++) {
-        free(argv[i])
-    }
-    free(argv);rgs[])
         }
         else {
             execvp(args[0], args);
         }
     }
-    else if (f==-1) {
+    else if (f ==-1) {
         return -1;
     }
     else {
         wait(NULL);
     }
-    int i = 0;
-    for (i; args[i]!=NULL; i++) {
-        free(args[i])
-    }
-    free(args);
+    // for (i; args[i]!=NULL; i++) {
+    //     free(args[i]);
+    // }
+    // free(args);
 }
