@@ -51,21 +51,20 @@ char *cleanInput(char input[256]){
 
 int runCommand(char argc[256]) {
     char ** args = parseArgs(argc, " ");
-    int f = fork();
-    int i = 0;
-    printf("int: %d\n", f);
     if (strcmp(args[0], "exit") == 0) {
         return 0;
     }
+    else if (strcmp(args[0],"cd") == 0) {
+        printf("cd check: %d", strcmp(args[0], "cd"));
+        cd(args[1]);
+    }
+
+    int f = fork();
+    printf("int: %d\n", f);
+    int i = 0;
+    
     if (f == 0) {
-        printf("check: %d", strcmp(args[0], "cd"));
-        printf("exit check: %d", strcmp(args[0], "exit"));
-        if (strcmp(args[0],"cd") == 0) {
-            cd(args[1]);
-        }
-        else {
-            execvp(args[0], args);
-        }
+        execvp(args[0], args);
     }
     else if (f ==-1) {
         return -1;

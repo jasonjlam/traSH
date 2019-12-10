@@ -26,7 +26,7 @@ int main(){
         printf("\n%s", input);
         printf("\n# of args: %d \n", charFreq(input, " "));
         argc = parseArgs(input, ";");
-        for (i = 0; argc[i] != NULL; i ++) {
+        for (i = 0; argc[i] != NULL; i++) {
             result = runCommand(argc[i]);
             if (result == 0) {
                 return 0;
