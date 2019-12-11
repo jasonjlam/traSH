@@ -10,6 +10,7 @@
 #include <dirent.h>
 #include "cmds.h"
 
+// Counts number of spaces in an input
 int charFreq(char *input, char *delim){
     int i = 0;
     int count = 0;
@@ -21,6 +22,7 @@ int charFreq(char *input, char *delim){
     return count + 1;
 }
 
+// takes an input string, returns an argv of all arguments in a char **
 char **parseArgs(char *input, char *separator){
     char *line = input;
     char *token;
