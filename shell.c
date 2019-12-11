@@ -16,37 +16,47 @@ int charFreq(char *input, char *delim){
     int count = 0;
     for(; input[i] == *delim; i++){
     };
-    for(; input[i] != '\0'; i++){
-	       // if(*delim == input[i] ){
-       for (i; input[i] == *delim; i ++) {
-           }
-       count++;
-      }
+    printf("current index start: %d\n", i);
+    printf("length: %ld \n", strlen(input));
+    for(;  i < strlen(input); i++){
+        printf("current index: %d - %d - %c\n", i, *delim == input[i], input[i] );
+	    if(*delim == input[i] ){
+            for (i; input[i] == *delim; i ++) {
+            }
+            printf("current index count: %d\n", i);
+            count++;
+       }
+    }
+    printf("current index: %d - %d - \"%c\"\n", i, *delim == input[i], input[i] );
+    printf("exit index: %d\n", i);
     return count + 1;
 }
 
 // takes an input string, returns an argv of all arguments in a char **
 char **parseArgs(char *input, char *separator){
-    printf("calling parseArgs:%s, %s\n", input, separator);
-    char *line = input;
+    printf("calling parseArgs:%s, \"%s\"\n", input, separator);
+    char line2[256];
+    strcpy(line2, input);
+    char *line = line2;
     char *token = strsep(&line, separator);
     int i = 0;
     int size = charFreq(input, separator);
     printf("charFreq:%d\n", size);
     printf("size:%d\n", size);
     char ** argv = calloc(sizeof(char *), size + 1);
-    for (i = 0; token != NULL; i++) {
+    while (token != NULL) {
         printf("token: %s \n",token);
         printf("line: %s \n", line);
         if (strcmp(token, "") != 0) {
             printf("Malloc:\n");
-            argv[i] = malloc(sizeof(char[strlen(token)]));
-            argv[i] = token;
+            argv[i] = malloc(sizeof(strlen(token)+1));
+            strcpy(argv[i], token);
             printf("%s\n", argv[i]);
+            i ++;
         }
         token = strsep(&line, separator);
     }
-    argv[size] = NULL;
+    // argv[size] = '\0';
     return argv;
     // printf("\nSize: %d", size)
 }
@@ -63,6 +73,7 @@ char *cleanInput(char input[256]){
 
 int runCommand(char argc[256]) {
     char ** args = parseArgs(argc, " ");
+    printf("arg0:%s\n", args[1]);
     if (strcmp(args[0], "exit") == 0) {
         return 0;
     }
@@ -73,7 +84,6 @@ int runCommand(char argc[256]) {
     int f = fork();
     printf("int: %d\n", f);
     int i = 0;
-
     if (f == 0) {
         printf("ARGUMENTS:\n");
         for (int i = 0; args[i] != NULL; i ++) {
