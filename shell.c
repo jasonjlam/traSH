@@ -18,9 +18,9 @@ int charFreq(char *input, char *delim){
     };
     for(; input[i] != '\0'; i++){
 	       if(*delim == input[i] ){
-               for (; input[i] == *delim; i ++) {
+               for (i; input[i] == *delim; i ++) {
                }
-	          count++;
+	           count++;
 	    }
       }
     return count + 1;
@@ -28,17 +28,24 @@ int charFreq(char *input, char *delim){
 
 // takes an input string, returns an argv of all arguments in a char **
 char **parseArgs(char *input, char *separator){
+    printf("calling parseArgs:%s, %s\n", input, separator);
     char *line = input;
-    char *token;
+    char *token = strsep(&line, separator);
     int i = 0;
     int size = charFreq(input, separator);
     printf("charFreq:%d\n", size);
+    printf("size:%d\n", size);
     char ** argv = calloc(sizeof(char *), size + 1);
-    for (i = 0; i < size; i++) {
+    for (i = 0; token != NULL; i++) {
+        printf("token: %s \n",token);
+        printf("line: %s \n", line);
+        if (strcmp(token, "") != 0) {
+            printf("Malloc:\n");
+            argv[i] = malloc(sizeof(char[strlen(token)]));
+            argv[i] = token;
+            printf("%s\n", argv[i]);
+        }
         token = strsep(&line, separator);
-        argv[i] = malloc(sizeof(char[strlen(token)]));
-        argv[i] = token;
-        printf("%s\n", argv[i]);
     }
     argv[size] = NULL;
     return argv;
@@ -64,12 +71,15 @@ int runCommand(char argc[256]) {
         printf("cd check: %d", strcmp(args[0], "cd"));
         cd(args[1]);
     }
-
     int f = fork();
     printf("int: %d\n", f);
     int i = 0;
 
     if (f == 0) {
+        printf("ARGUMENTS:\n");
+        for (int i = 0; args[i] != NULL; i ++) {
+            printf("Arg: %s\n", args[i]);
+        }
         execvp(args[0], args);
     }
     else if (f ==-1) {
