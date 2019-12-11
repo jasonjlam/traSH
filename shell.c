@@ -79,6 +79,7 @@ int runCommand(char argc[256]) {
         for (int i = 0; args[i] != NULL; i ++) {
             printf("Arg: %s\n", args[i]);
         }
+	
         execvp(args[0], args);
     }
     else if (f ==-1) {
