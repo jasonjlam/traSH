@@ -17,11 +17,10 @@ int charFreq(char *input, char *delim){
     for(; input[i] == *delim; i++){
     };
     for(; input[i] != '\0'; i++){
-	       if(*delim == input[i] ){
-               for (i; input[i] == *delim; i ++) {
-               }
-	           count++;
-	    }
+	       // if(*delim == input[i] ){
+       for (i; input[i] == *delim; i ++) {
+           }
+       count++;
       }
     return count + 1;
 }
