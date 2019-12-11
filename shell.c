@@ -14,8 +14,12 @@
 int charFreq(char *input, char *delim){
     int i = 0;
     int count = 0;
+    for(; input[i] == *delim; i++){
+    };
     for(; input[i] != '\0'; i++){
 	       if(*delim == input[i] ){
+               for (; input[i] == *delim; i ++) {
+               }
 	          count++;
 	    }
       }
@@ -64,7 +68,7 @@ int runCommand(char argc[256]) {
     int f = fork();
     printf("int: %d\n", f);
     int i = 0;
-    
+
     if (f == 0) {
         execvp(args[0], args);
     }
