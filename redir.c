@@ -11,7 +11,7 @@
 
 // Runs commands dealing with pipes
 int pipes(char argc[256]) {
-    int i = 0;
+    int i = 0;    
     // File descriptor we use for pipes
     FILE *pipe;
     char* arg = argc;
