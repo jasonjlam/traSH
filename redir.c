@@ -53,26 +53,39 @@ int redirect(char args[256], char *redir_type){
 	command[j] = argv[j];
 	printf("\t[%s]\n", command[j]);
     }
-    command[j] = "\0";
+    command[j] = NULL;
 
     filename = argv[j+1];    
     printf("File Name:\n");    
-    printf("\t[%s]", filename);
-    //sleep(1);
-    int f = fork();
-    printf("%d\n", f);
-    if (f == 0) {
-	printf("child");
-	int stdout = dup(1);
-	printf("Temporary out: [%d]", stdout);
-	int file = open(filename, O_TRUNC);
-	dup2(file, 1);
-	printf("file becomes stdout...");
-	execvp(command[0], command);
-	dup2(1, stdout);
-	printf("making stdout stdout again...");
-	close(file);
-    } else if(f > 0){
+    printf("\t[%s]\n", filename);
+    int pid = fork();
+    printf("%d\n", pid);
+    if (pid == 0) {
+	if(strcmp(redir_type, ">") == 0){
+	    // printf("child\n");
+	    int stdout = dup(1);
+	    // printf("Temporary out: [%d]\n", stdout);
+	    int file = open(filename, O_WRONLY | O_TRUNC);
+	    // printf("File: [%d]\n", file);	
+	    dup2(file, 1);
+	    execvp(command[0], command);
+	    dup2(stdout, 1);
+	    
+	    close(file);
+	} else if (strcmp(redir_type, "<") == 0) {
+	    // printf("child\n");
+	    int stdin = dup(0);
+	    // printf("Temporary out: [%d]\n", stdout);
+	    int file = open(filename, O_WRONLY | O_TRUNC);
+	    // printf("File: [%d]\n", file);	
+	    dup2(file, 0);
+	    execvp(command[0], command);
+	    dup2(stdin, 0);
+	    
+	    close(file);
+
+	}
+    } else if(pid > 0){
 	wait(NULL);
     }
     
