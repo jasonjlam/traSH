@@ -65,7 +65,7 @@ int redirect(char args[256], char *redir_type){
 	    // printf("child\n");
 	    int stdout = dup(1);
 	    // printf("Temporary out: [%d]\n", stdout);
-	    int file = open(filename, O_WRONLY | O_TRUNC);
+	    int file = open(filename, O_WRONLY | O_TRUNC | O_CREAT, 00644);
 	    // printf("File: [%d]\n", file);	
 	    dup2(file, 1);
 	    execvp(command[0], command);
@@ -76,7 +76,7 @@ int redirect(char args[256], char *redir_type){
 	    // printf("child\n");
 	    int stdin = dup(0);
 	    // printf("Temporary out: [%d]\n", stdout);
-	    int file = open(filename, O_WRONLY | O_TRUNC);
+	    int file = open(filename, O_RDONLY | O_EXCL);
 	    // printf("File: [%d]\n", file);	
 	    dup2(file, 0);
 	    execvp(command[0], command);
