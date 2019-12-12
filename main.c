@@ -27,7 +27,7 @@ int main(){
         // Gets rid of the \n at the end
         cleanInput(input);
         printf("\n%s", input);
-        printf("\n# of args: %d \n", charFreq(input, " "));
+        printf("\n# of args: %d \n", charFreq(input, " ")); 
         // Parse by semicolons
         argc = parseArgs(input, ";");
         // For each parsed command separated by semicolons, run it
@@ -35,8 +35,11 @@ int main(){
             if (charFreq(argc[i], "|") > 1) {
                 // If the command involves pipes, invoke the pipe method
                 result = pipes(argc[i]);
-            }
-            else {
+            } else if (charFreq(argc[i], ">") > 1) {
+		result = redirect_out(argc[i]);
+	    } else if (charFreq(argc[i], "<") > 1) {
+		result = redirect_in(argc[i]);
+	    } else {
                 // Otherwise, run the command normally
                 result = runCommand(argc[i]);
             }

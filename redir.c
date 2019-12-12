@@ -32,3 +32,26 @@ int pipes(char argc[256]) {
     pclose(pipe);
     return 1;
 }
+
+int redirect_in(char args[256]){
+    printf("Redir Type: <\n");
+    char *argc = args;
+    char **argv = parseArgs(argc, " ");
+    int i = 0;
+    for(; argv[i] != NULL; i++){
+	printf("\t[%s]\n", argv[i]);	
+    }
+    return 1;
+}
+
+int redirect_out(char args[256]){
+    printf("Redir Type: >\n");
+    char *argc = args;
+    char **argv = parseArgs(argc, " ");
+    int i = 0;
+    for(; argv[i] != NULL; i++){
+	printf("\t[%s]\n", argv[i]);
+    }
+    return 1;
+}
+

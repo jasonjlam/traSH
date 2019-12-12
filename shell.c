@@ -102,23 +102,7 @@ int runCommand(char argc[256]) {
         }
 
 	// Parsing arguments for a redirect character
-	char *redir_type;
-	int i = 0;
-	for(i = 0; args[i] != NULL; i++){
-	    if(strcmp(args[i], "<") == 0){
-		redir_type = args[i];
-	    } else if (strcmp(args[i], ">") == 0){
-		redir_type = args[i]; 
-	    } else if (strcmp(args[i], "<<") == 0){
-		redir_type = args[i];
-	    } else if (strcmp(args[i], ">>") == 0){
-		redir_type = args[i];
-	    } else {}
-	}
-	printf("Redirect Character: %s", redir_type);
-	
-	
-        execvp(args[0], args);
+	execvp(args[0], args);
     }
     else if (f ==-1) {
         return -1;
