@@ -1,3 +1,3 @@
 void cd();
 
-void exitcmd();
+void exitcdCheck(char** args);
