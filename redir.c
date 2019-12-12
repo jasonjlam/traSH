@@ -8,6 +8,7 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <dirent.h>
+#include "shell.h"
 
 // Runs commands dealing with pipes
 int pipes(char argc[256]) {
@@ -33,25 +34,48 @@ int pipes(char argc[256]) {
     return 1;
 }
 
-int redirect_in(char args[256]){
-    printf("Redir Type: <\n");
+// Handle redirect stdin requests
+int redirect(char args[256], char *redir_type){
+    printf("Redir Type: %s\n", redir_type);
     char *argc = args;
+    int size = charFreq(argc, " ");
     char **argv = parseArgs(argc, " ");
+    char *command[size - 2];
+    char *filename;
     int i = 0;
-    for(; argv[i] != NULL; i++){
+    int j = 0;
+    for(; i < size; i++){
 	printf("\t[%s]\n", argv[i]);	
     }
-    return 1;
-}
 
-int redirect_out(char args[256]){
-    printf("Redir Type: >\n");
-    char *argc = args;
-    char **argv = parseArgs(argc, " ");
-    int i = 0;
-    for(; argv[i] != NULL; i++){
-	printf("\t[%s]\n", argv[i]);
+    printf("Command:\n");
+    for(; strcmp(argv[j], redir_type) != 0; j++){
+	command[j] = argv[j];
+	printf("\t[%s]\n", command[j]);
     }
+    command[j] = "\0";
+
+    filename = argv[j+1];    
+    printf("File Name:\n");    
+    printf("\t[%s]", filename);
+    //sleep(1);
+    int f = fork();
+    printf("%d\n", f);
+    if (f == 0) {
+	printf("child");
+	int stdout = dup(1);
+	printf("Temporary out: [%d]", stdout);
+	int file = open(filename, O_TRUNC);
+	dup2(file, 1);
+	printf("file becomes stdout...");
+	execvp(command[0], command);
+	dup2(1, stdout);
+	printf("making stdout stdout again...");
+	close(file);
+    } else if(f > 0){
+	wait(NULL);
+    }
+    
     return 1;
 }
 

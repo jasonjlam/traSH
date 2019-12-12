@@ -36,9 +36,9 @@ int main(){
                 // If the command involves pipes, invoke the pipe method
                 result = pipes(argc[i]);
             } else if (charFreq(argc[i], ">") > 1) {
-		result = redirect_out(argc[i]);
+		result = redirect(argc[i], ">");
 	    } else if (charFreq(argc[i], "<") > 1) {
-		result = redirect_in(argc[i]);
+		result = redirect(argc[i], "<");
 	    } else {
                 // Otherwise, run the command normally
                 result = runCommand(argc[i]);

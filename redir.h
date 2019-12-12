@@ -1,5 +1,5 @@
 int pipes(char argc[256]);
 
-int redir_in(char argc[256]);
+int redirect(char argc[256], char *redir_type);
 
-int redir_out(char argc[256]);
+
