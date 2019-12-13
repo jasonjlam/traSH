@@ -94,3 +94,14 @@ int redirect(char args[256], char *redir_type){
     return 1;
 }
 
+int redirect_both(char args[256]){
+    char *argc = args;
+    char **argv
+	// populate with three strings
+    char *token = "";
+    while (token != NULL) {
+	token = strsep(&argc, "<>");
+	token 
+    }
+}
+
