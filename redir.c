@@ -68,7 +68,7 @@ int redirect(char args[256], char *redir_type){
 	    int file = open(filename, O_WRONLY | O_TRUNC | O_CREAT, 00644);
 	    // printf("File: [%d]\n", file);	
 	    dup2(file, 1);
-	    execvp(command[0], command);
+	    int s = execvp(command[0], command);	    
 	    dup2(stdout, 1);
 	    
 	    close(file);
@@ -84,7 +84,9 @@ int redirect(char args[256], char *redir_type){
 	    
 	    close(file);
 
-	}
+	} else {
+	    // Return an error
+	}	    	
     } else if(pid > 0){
 	wait(NULL);
     }

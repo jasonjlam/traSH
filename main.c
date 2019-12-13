@@ -47,9 +47,11 @@ int main(){
         // For each parsed command separated by semicolons, run it
         for (i = 0; argc[i] != NULL; i++) {
             if (charFreq(argc[i], "|") > 1) {
-                // If the command involves pipes, invoke the pipe method
+                // If the command involves pipes, invoke the pipe method 
                 result = pipes(argc[i]);
-            } else if (charFreq(argc[i], ">") > 1) {
+	    } else if (( charFreq(argc[i], ">") > 1) && (charFreq(argc[i], "<") > 1)){	       
+		result = redirect(argc[i], "<>");
+            } else if (charFreq(argc[i], ">") > 1) {	   
 		result = redirect(argc[i], ">");
 	    } else if (charFreq(argc[i], "<") > 1) {
 		result = redirect(argc[i], "<");
