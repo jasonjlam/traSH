@@ -95,25 +95,31 @@ int redirect(char args[256], char *redir_type){
 }
 
 int redirect_both(char args[256]){
-    char *argc = args;   
+    char *argc = args;
+    printf("\n\tredir_both Argument:[%s]", argc);
     //making three seperate string variables would have been counterproductive, as strsep must be
     //used with a looping construct
     char *cmds[3];
-    char **cmds_vector[3];
+    char ***cmds_v;
     
 	// populate with three strings
-    char *token = "";
+    char *token;
     int i = 0;
-    for (i; token != NULL; i++) {
-	token = strsep(&argc, "<>");
-	cmds[i] = token;
-	printf("\n\tDouble Redirect Args:[%s]\n", token);
-	}
-
     int j = 0;
-    for (j; j < 3; j++) {
-	cmds_vector[j] = parseArgs(cmds[j], " ");
-    }
+    for (i; argc != NULL; i++) {
+	token = strsep(&argc, "<>");
+	// cmds[i] = token;
+	// cleanInput(token);
+	printf("\n\tDouble Redirect Args:[%s]\n", token);
+	// for (j; j < 3; j++) {
+	//     char **section_vector;
+	//     section_vector = parseArgs()
+	// }
 
+	cmds_v[i] = parseArgs(token, " ");	
+	for (j; cmds_v[i][j] != NULL; j++) {
+	    printf("\n\t\t[%s]", cmds_v[i][j]);
+	}
+    }
 }
 
