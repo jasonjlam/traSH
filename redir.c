@@ -65,17 +65,12 @@ int redirect(char args[256], char *redir_type){
 	    // printf("child\n");
 	    int stdout = dup(1);
 	    // printf("Temporary out: [%d]\n", stdout);
-        int file = open(filename, O_CREAT|O_EXCL|O_WRONLY|O_TRUNC, 00644);
-        if (file == -1) {
-        	file = open(filename, O_WRONLY|O_TRUNC);
-        }
+	    int file = open(filename, O_WRONLY | O_TRUNC | O_CREAT, 00644);
 	    // printf("File: [%d]\n", file);
 	    dup2(file, 1);
 	    int s = execvp(command[0], command);
-        if (errno != 0) {
-            printf("Error: %s \n", strerror(errno));
-            errno = 0;
-        }
+	    dup2(stdout, 1);
+
 	    close(file);
 	} else if (strcmp(redir_type, "<") == 0) {
 	    // printf("child\n");
@@ -125,26 +120,31 @@ int redirect_both (char args[256]){
     for (i = 0; i < 3; i ++) {
         printf("redir test: %d, %s \n", i, cmds[i]);
     }
-    char **command = parseArgs(cmds[1], " ");
+    char **command = parseArgs(cmds[0], " ");
+    for (i = 0; i < 3; i ++) {
+        printf("args: %d, %s \n", i, command[i]);
+    }
     char* fileIn = NULL;
     char* fileOut = NULL;
     if (redirCheck) {
-        fileIn = cmds[0];
+        fileIn = cmds[1];
         fileOut = cmds[2];
     }
     else {
         fileIn = cmds[2];
-        fileOut = cmds[0];
+        fileOut = cmds[1];
     }
+    printf("Filein  %s\n", fileIn);
+    printf("Fileout %s \n", fileOut);
     int pid = fork();
     printf("%d\n", pid);
     if (pid == 0) {
-        // printf("Temporary out: [%d]\n", stdout);
-        int redirOut = open(fileIn, O_CREAT|O_EXCL|O_WRONLY|O_TRUNC, 00644);
+        // printf("Temporary out: [%d]\ntr a-z A-Z < wholist > foo", stdout);
+        int redirOut = open(fileOut, O_CREAT|O_EXCL|O_WRONLY|O_TRUNC, 0755);
         if (redirOut == -1) {
-        	redirOut = open(fileIn, O_WRONLY|O_TRUNC);
+                redirOut = open(fileOut, O_WRONLY|O_TRUNC);
         }
-        int redirIn = open(fileOut, O_RDONLY | O_EXCL);
+        int redirIn = open(fileIn, O_RDONLY | O_EXCL);
         // printf("File: [%d]\n", file);
         dup2(redirIn, 0);
 		dup2(redirOut, 1);

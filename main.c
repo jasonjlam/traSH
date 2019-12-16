@@ -51,16 +51,12 @@ int main(){
             if (charFreq(argc[i], "|") > 1) {
                 // If the command involves pipes, invoke the pipe method
                 result = pipes(argc[i]);
-                freeMem(argc);
     	    } else if (( charFreq(argc[i], ">") > 1) && (charFreq(argc[i], "<") > 1)){
         		result = redirect_both(argc[i]);\
-                freeMem(argc);
             } else if (charFreq(argc[i], ">") > 1) {
         		result = redirect(argc[i], ">");
-                freeMem(argc);
     	    } else if (charFreq(argc[i], "<") > 1) {
         		result = redirect(argc[i], "<");
-                freeMem(argc);
     	    } else {
                     // Otherwise, run the command normally
                     result = runCommand(argc[i]);
