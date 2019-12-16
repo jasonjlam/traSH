@@ -33,6 +33,7 @@ by Jason Lam and Joseph Yusufov
 - Changing directory into a named directory, rather than using `.` or `..`, will give an error, however will still change the working directory as expected.
 - The last argument in a double redirection command gets truncated 2 characters short of where it should be (as a result, double redirection is in the *Attempted* category).
 - Occasionally foo will produce the file f1
+- Sometimes 'exit' doesn't exit the shell on the first attempt. If this happens, 'exit' again and that should do the trick.
 
 ### Files and Function Headers
 ##### **main.c** -- The file containing main. Runs the shell, recieves input, and redirects it to the relevant handler processes  
@@ -73,6 +74,10 @@ by Jason Lam and Joseph Yusufov
 - `int redirect_both(char args[512]);`
     - Very similar to *redirect()*, except takes a string with two redirects ( foo < loo > shoe), and ideally, does the proper redirection.
     - Currently **not working** because of a string truncation error, but regarding file table manipulation, the developers are aware of the proper steps to be taken.
+- `int redirCheck( char args[256] );`
+    - Helper function for the redir functions
+    - Checks which kind of redirect is provided to it in the parameter.
+    - Returns a number that corresponds to the redirect type.
 ##### **cmds.c** -- A small file with functions to handle a few commands, such as cd and exit.
 - `void cd(char *dir);`
     - Changes working directory to the one provided in the string parameter.

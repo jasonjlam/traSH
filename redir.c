@@ -36,7 +36,7 @@ int pipes(char argc[256]) {
 
 // Handle redirect stdin requests
 int redirect(char args[256], char *redir_type){
-    printf("Redir Type: %s\n", redir_type);
+//    printf("Redir Type: %s\n", redir_type);
     char *argc = args;
     int size = charFreq(argc, " ");
     char **argv = parseArgs(argc, " ");
@@ -44,22 +44,22 @@ int redirect(char args[256], char *redir_type){
     char *filename;
     int i = 0;
     int j = 0;
-    for(; i < size; i++){
-	printf("\t[%s]\n", argv[i]);
-    }
+//    for(; i < size; i++){
+//	printf("\t[%s]\n", argv[i]);
+//    }
 
-    printf("Command:\n");
+//    printf("Command:\n");
     for(; strcmp(argv[j], redir_type) != 0; j++){
 	command[j] = argv[j];
-	printf("\t[%s]\n", command[j]);
+//	printf("\t[%s]\n", command[j]);
     }
     command[j] = NULL;
 
     filename = argv[j+1];
-    printf("File Name:\n");
-    printf("\t[%s]\n", filename);
+//    printf("File Name:\n");
+//    printf("\t[%s]\n", filename);
     int pid = fork();
-    printf("%d\n", pid);
+//    printf("%d\n", pid);
     if (pid == 0) {
 	if(strcmp(redir_type, ">") == 0){
 	    // printf("child\n");
@@ -151,9 +151,7 @@ void redirect_both (char args[256]){
         // printf("Temporary out: [%d]\ntr a-z A-Z < wholist > foo", stdout);
         // printf("File: [%d]\n", file);
         dup2(redirIn, 0);
-		dup2(redirOut, 1);
-        close(redirIn);
-        close(redirOut);
+	dup2(redirOut, 1);
         // printf("Temporary out: [%d]\n", stdout);
         // printf("File: [%d]\n", file);
         execvp(command[0], command);
@@ -163,6 +161,8 @@ void redirect_both (char args[256]){
         }
         dup2(stdin, 0);
         dup2(stdout, 1);
+        close(redirIn);
+        close(redirOut);	
     }
     else {
         wait(NULL);
