@@ -109,7 +109,7 @@ int redirCheck (char arg[256]) {
         }
     }
 }
-int redirect_both (char args[256]){
+void redirect_both (char args[256]){
     int i = 0;
     char *argc = args;
     char *cmds[3];
@@ -121,6 +121,8 @@ int redirect_both (char args[256]){
         printf("redir test: %d, %s \n", i, cmds[i]);
     }
     char **command = parseArgs(cmds[0], " ");
+    cmds[1] +=1;
+    cmds[2] +=1;
     for (i = 0; i < 3; i ++) {
         printf("args: %d, %s \n", i, command[i]);
     }
@@ -134,20 +136,24 @@ int redirect_both (char args[256]){
         fileIn = cmds[2];
         fileOut = cmds[1];
     }
-    printf("Filein  %s\n", fileIn);
-    printf("Fileout %s \n", fileOut);
+    printf("Filein%s\n", fileIn);
+    printf("Fileout%s \n", fileOut);
     int pid = fork();
     printf("%d\n", pid);
-    if (pid == 0) {
+    int stdin = dup(0);
+    int stdout = dup(1);
+    int redirOut = open(fileOut, O_CREAT|O_WRONLY|O_TRUNC, 0755);
+    if (redirOut == -1) {
+            redirOut = open(fileOut, O_WRONLY|O_TRUNC);
+    }
+    int redirIn = open(fileIn, O_RDONLY);
+    if (pid = 0) {
         // printf("Temporary out: [%d]\ntr a-z A-Z < wholist > foo", stdout);
-        int redirOut = open(fileOut, O_CREAT|O_EXCL|O_WRONLY|O_TRUNC, 0755);
-        if (redirOut == -1) {
-                redirOut = open(fileOut, O_WRONLY|O_TRUNC);
-        }
-        int redirIn = open(fileIn, O_RDONLY | O_EXCL);
         // printf("File: [%d]\n", file);
         dup2(redirIn, 0);
 		dup2(redirOut, 1);
+        close(redirIn);
+        close(redirOut);
         // printf("Temporary out: [%d]\n", stdout);
         // printf("File: [%d]\n", file);
         execvp(command[0], command);
@@ -155,9 +161,11 @@ int redirect_both (char args[256]){
             printf("Error: %s \n", strerror(errno));
             errno = 0;
         }
-        close(redirIn);
-        close(redirOut);
+        dup2(stdin, 0);
+        dup2(stdout, 1);
     }
-    wait(NULL);
+    else {
+        wait(NULL);
+    }
 
 }

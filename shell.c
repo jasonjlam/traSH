@@ -103,6 +103,10 @@ int runCommand(char argc[512]) {
 
 	// Parsing arguments for a redirect character
 	execvp(args[0], args);
+    if (errno != 0) {
+        printf("Error: %s \n", strerror(errno));
+        errno = 0;
+    }
     }
     else if (f ==-1) {
         return -1;
@@ -111,10 +115,6 @@ int runCommand(char argc[512]) {
     else {
         wait(NULL);
         freeMem(args);
-    }
-    if (errno != 0) {
-        printf("Error: %s \n", strerror(errno));
-        errno = 0;
     }
     // for (i; args[i]!=NULL; i++) {
     //     free(args[i]);

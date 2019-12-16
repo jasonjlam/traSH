@@ -30,17 +30,18 @@ by Jason Lam and Joseph Yusufov
 - Negotiations with Microsoft **did not ultimately lead to the sale** of traSH
 
 ### Bugs
-- Changing directory into a named directory, rather than using `.` or `..`, will give an error, however will still change the working directory as expected. 
+- Changing directory into a named directory, rather than using `.` or `..`, will give an error, however will still change the working directory as expected.
 - The last argument in a double redirection command gets truncated 2 characters short of where it should be (as a result, double redirection is in the *Attempted* category).
+- Occasionally foo will produce the file f1
 
 ### Files and Function Headers
 ##### **main.c** -- The file containing main. Runs the shell, recieves input, and redirects it to the relevant handler processes  
 - `int main();`
-    - Prints awesome ASCII Art 
+    - Prints awesome ASCII Art
     - Accepts input using 'fgets()'
     - Calls 'parseArgs()' to parse commands seperated by a ';'
     - Checks to see whether or not input includes a special operator (e.g. <, >, |), and invokes proper functions
-    - Otherwise, invokes the 'runCommand()' function 
+    - Otherwise, invokes the 'runCommand()' function
 ##### **shell.c** -- Helper functions, special conditions, and parser functions that make *main.c* look pretty
 - `int charFreq(char *input, char *delim);`
     - Takes a string to be parsed, and a string containing delimeters to parse by.
@@ -80,9 +81,6 @@ by Jason Lam and Joseph Yusufov
 - `void exitcdCheck(char ** args);`
     - Checks if the argument array's first element is either 'exit', or 'cd'
     - Exits the shell when appropriate, and calls the *cd()* function when appropriate.
-
-
-
-
-
-
+- `void freeMem(char ** arg);`
+    - Frees every element in the array, along with the array itself
+    - Used to free memory *malloc()ed in *parseArgs()
