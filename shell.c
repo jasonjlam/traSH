@@ -39,7 +39,7 @@ int charFreq(char *input, char *delim){
 char **parseArgs(char *input, char *separator){
     // printf("calling parseArgs:%s, \"%s\"\n", input, separator);
     // Our input
-    char line2[256];
+    char line2[512];
     strcpy(line2, input);
     char *line = line2;
     // Initializes token with first call to strsep()
@@ -73,7 +73,7 @@ char **parseArgs(char *input, char *separator){
 }
 
 // Gets rid of \n in stdin
-char *cleanInput(char input[256]){
+char *cleanInput(char input[512]){
     int i = 0;
     for (i; input[i] != '\0'; i++) {
         if (input[i] == '\n') {
@@ -84,7 +84,7 @@ char *cleanInput(char input[256]){
 }
 
 // This runs the command given that there is no piping
-int runCommand(char argc[256]) {
+int runCommand(char argc[512]) {
     // Parses it
     char ** args = parseArgs(argc, " ");
     // printf("arg0:%s\n", args[1]);

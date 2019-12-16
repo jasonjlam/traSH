@@ -15,7 +15,7 @@
 int main(){
     int i = 0;
     int result = 0;
-    char input[256];
+    char input[512];
     char ** argc = NULL;
     char dir[512];
     char * msg = 
@@ -37,7 +37,7 @@ int main(){
         getcwd(dir, 512);
         printf("\n%s$ ", dir );
         // Takes commandline input
-        fgets(input, 256, stdin);
+        fgets(input, 516, stdin);
         // Gets rid of the \n at the end
         cleanInput(input);
         printf("\n%s", input);
