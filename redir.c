@@ -12,7 +12,7 @@
 
 // Runs commands dealing with pipes
 int pipes(char argc[256]) {
-    int i = 0;    
+    int i = 0;
     // File descriptor we use for pipes
     FILE *pipe;
     char* arg = argc;
@@ -45,7 +45,7 @@ int redirect(char args[256], char *redir_type){
     int i = 0;
     int j = 0;
     for(; i < size; i++){
-	printf("\t[%s]\n", argv[i]);	
+	printf("\t[%s]\n", argv[i]);
     }
 
     printf("Command:\n");
@@ -55,8 +55,8 @@ int redirect(char args[256], char *redir_type){
     }
     command[j] = NULL;
 
-    filename = argv[j+1];    
-    printf("File Name:\n");    
+    filename = argv[j+1];
+    printf("File Name:\n");
     printf("\t[%s]\n", filename);
     int pid = fork();
     printf("%d\n", pid);
@@ -65,63 +65,99 @@ int redirect(char args[256], char *redir_type){
 	    // printf("child\n");
 	    int stdout = dup(1);
 	    // printf("Temporary out: [%d]\n", stdout);
-	    int file = open(filename, O_WRONLY | O_TRUNC | O_CREAT, 00644);
-	    // printf("File: [%d]\n", file);	
+        int file = open(filename, O_CREAT|O_EXCL|O_WRONLY|O_TRUNC, 00644);
+        if (file == -1) {
+        	file = open(filename, O_WRONLY|O_TRUNC);
+        }
+	    // printf("File: [%d]\n", file);
 	    dup2(file, 1);
-	    int s = execvp(command[0], command);	    
-	    dup2(stdout, 1);
-	    
+	    int s = execvp(command[0], command);
+        if (errno != 0) {
+            printf("Error: %s \n", strerror(errno));
+            errno = 0;
+        }
 	    close(file);
 	} else if (strcmp(redir_type, "<") == 0) {
 	    // printf("child\n");
 	    int stdin = dup(0);
 	    // printf("Temporary out: [%d]\n", stdout);
 	    int file = open(filename, O_RDONLY | O_EXCL);
-	    // printf("File: [%d]\n", file);	
+	    // printf("File: [%d]\n", file);
 	    dup2(file, 0);
 	    execvp(command[0], command);
 	    dup2(stdin, 0);
-	    
+
 	    close(file);
 
 	} else {
 	    // Return an error
-	}	    	
+	}
     } else if(pid > 0){
 	wait(NULL);
     }
-    
+
     return 1;
 }
-
-int redirect_both(char args[512]){
-    char *argc = args;
-    printf("\n\tredir_both Argument:[%s]", argc);
-    //making three seperate string variables would have been counterproductive, as strsep must be
-    //used with a looping construct
-    char **cmds_v[3];
-    
-	// populate with three strings
-    char *token;
+// Checks if < or > occurs in the double redirect first.
+// Returns 0 if > occurs first, 1 if < occurs first, or -1 if neither are found.
+int redirCheck (char arg[256]) {
     int i = 0;
-    for (i; i < 3; i++) {
-	strcpy(token, strsep(&argc, "<>"));
-	// cmds[i] = token;
-	// cleanInput(token);
-	printf("\n\tDouble Redirect Args:[%s]\n", token);
-	// for (j; j < 3; j++) {
-	//     char **section_vector;
-	//     section_vector = parseArgs()
-	// }
-
-	cmds_v[i] = parseArgs(token, " ");
-
-	//int j = 0;
-	//for (j; cmds_v[i][j] != NULL; j++) {
-	//    printf("\n\t\t[%s]\n", cmds_v[i][j]);
-	//}
+    for (i; i < strlen(arg); i ++) {
+        if (strcmp(&arg[i], ">")) {
+            return 0;
+        }
+        if (strcmp(&arg[i], "<")) {
+            return 1;
+        }
+        else {
+            return -1;
+        }
     }
-    printf("\n[%s]", cmds_v[2][0]); 
-    
 }
+int redirect_both (char args[256]){
+    int i = 0;
+    char *argc = args;
+    char *cmds[3];
+    char *token = "";
+    for (i; argc != NULL; i++) {
+    	cmds[i] = strsep(&argc, "<>");
+    }
+    for (i = 0; i < 3; i ++) {
+        printf("redir test: %d, %s \n", i, cmds[i]);
+    }
+    char **command = parseArgs(cmds[1], " ");
+    char* fileIn = NULL;
+    char* fileOut = NULL;
+    if (redirCheck) {
+        fileIn = cmds[0];
+        fileOut = cmds[2];
+    }
+    else {
+        fileIn = cmds[2];
+        fileOut = cmds[0];
+    }
+    int pid = fork();
+    printf("%d\n", pid);
+    if (pid == 0) {
+        // printf("Temporary out: [%d]\n", stdout);
+        int redirOut = open(fileIn, O_CREAT|O_EXCL|O_WRONLY|O_TRUNC, 00644);
+        if (redirOut == -1) {
+        	redirOut = open(fileIn, O_WRONLY|O_TRUNC);
+        }
+        int redirIn = open(fileOut, O_RDONLY | O_EXCL);
+        // printf("File: [%d]\n", file);
+        dup2(redirIn, 0);
+		dup2(redirOut, 1);
+        // printf("Temporary out: [%d]\n", stdout);
+        // printf("File: [%d]\n", file);
+        execvp(command[0], command);
+        if (errno != 0) {
+            printf("Error: %s \n", strerror(errno));
+            errno = 0;
+        }
+        close(redirIn);
+        close(redirOut);
+    }
+    wait(NULL);
 
+}

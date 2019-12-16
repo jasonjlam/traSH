@@ -9,6 +9,16 @@
 #include <sys/wait.h>
 #include <dirent.h>
 
+// Frees memory in an array
+void freeMem(char ** arg) {
+    int i = 0;
+    for (i; arg[i] != NULL; i ++) {
+        // printf("Freeing: %d %s \n", i, arg[i]);
+        free(arg[i]);
+    }
+    // printf("Freeing entire block: \n");
+    free(arg);
+}
 // Very simple cd command; changes directory and checks for failure
 void cd(char *dir) {
     printf("dir: %s", dir);

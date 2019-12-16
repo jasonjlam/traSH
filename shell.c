@@ -96,10 +96,10 @@ int runCommand(char argc[512]) {
     exitcdCheck(args);
     // Only executes for one of the forked processes
     if (f == 0) {
-        printf("ARGUMENTS:\n");
-        for (int i = 0; args[i] != NULL; i ++) {
-            printf("Arg: %s\n", args[i]);
-        }
+        // printf("ARGUMENTS:\n");
+        // for (int i = 0; args[i] != NULL; i ++) {
+        //     printf("Arg: %s\n", args[i]);
+        // }
 
 	// Parsing arguments for a redirect character
 	execvp(args[0], args);
@@ -110,6 +110,11 @@ int runCommand(char argc[512]) {
     // Parent must wait to continue
     else {
         wait(NULL);
+        freeMem(args);
+    }
+    if (errno != 0) {
+        printf("Error: %s \n", strerror(errno));
+        errno = 0;
     }
     // for (i; args[i]!=NULL; i++) {
     //     free(args[i]);
